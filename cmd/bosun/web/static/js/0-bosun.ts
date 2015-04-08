@@ -44,12 +44,6 @@ bosunApp.config(['$routeProvider', '$locationProvider', function($routeProvider:
 			controller: 'HostCtrl',
 			reloadOnSearch: false,
 		}).
-		when('/rule', {
-			title: 'Rule',
-			templateUrl: 'partials/rule.html',
-			controller: 'RuleCtrl',
-			reloadOnSearch: false,
-		}).
 		when('/silence', {
 			title: 'Silence',
 			templateUrl: 'partials/silence.html',
@@ -59,11 +53,6 @@ bosunApp.config(['$routeProvider', '$locationProvider', function($routeProvider:
 			title: 'Configuration',
 			templateUrl: 'partials/config.html',
 			controller: 'ConfigCtrl',
-		}).
-		when('/config2', {
-			title: 'Configuration2',
-			templateUrl: 'partials/config2.html',
-			controller: 'Config2Ctrl',
 			reloadOnSearch: false,
 		}).
 		when('/action', {

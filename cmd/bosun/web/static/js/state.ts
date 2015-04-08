@@ -111,6 +111,7 @@ bosunApp.factory('status', ['$http', '$q', '$sce', function($http: ng.IHttpServi
 					if (v.Actions && v.Actions.length > 0) {
 						v.LastAction = v.Actions[0];
 					}
+					//TODO:
 					v.RuleUrl = '/rule?' +
 						'alert=' + encodeURIComponent(btoa(v.AlertDef)) +
 						'&template=' + encodeURIComponent(btoa(v.TemplateDef)) +
