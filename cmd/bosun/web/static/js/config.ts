@@ -51,6 +51,39 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 	$scope.items = parseItems();
 	$scope.tab = search.tab || 'results';
 	
+	var expr = search.expr
+	function buildAlertFromExpr(){
+		if (!expr) return
+		var newAlertName = "test";
+		var idx = 1;
+		//find a unique alert name
+		while($scope.items["alert"].indexOf(newAlertName) != -1 || $scope.items["template"].indexOf(newAlertName) != -1){
+			newAlertName = "test" + idx;
+			idx++;
+		}
+		var text = '\n\ntemplate '+newAlertName+' {\n' +
+			'	subject = {{.Last.Status}}: {{.Alert.Name}} on {{.Group.host}}\n' +
+			'	body = `<p>Name: {{.Alert.Name}}\n' +
+			'	<p>Tags:\n' +
+			'	<table>\n' +
+			'		{{range $k, $v := .Group}}\n' +
+			'			<tr><td>{{$k}}</td><td>{{$v}}</td></tr>\n' +
+			'		{{end}}\n' +
+			'	</table>`\n' +
+			'}\n\n';
+		text += 'alert '+newAlertName+' {\n' +
+			'	template = '+newAlertName+'\n' +
+			'	crit = ' + atob(expr) + '\n' +
+			'}\n';
+		$scope.config_text += text;
+		$scope.items = parseItems();
+		$timeout(()=>{ 
+				//can't scroll editor until after control is updated. Defer it.
+				$scope.scrollTo("alert",newAlertName)
+		})
+	}
+		
+	
 	function parseItems() : { [type: string]: string[]; }{
 		var configText = $scope.config_text;
 		var re = /^\s*(alert|template|notification|lookup|macro)\s+([\w\-\.\$]+)\s*\{/gm; 
@@ -80,6 +113,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 		.success((data) => {
 			$scope.config_text = data;
 			$scope.items = parseItems();
+			buildAlertFromExpr()
 			if(!$scope.selected_alert && $scope.items["alert"].length){
 				$scope.selected_alert = $scope.items["alert"][0];
 			}
