@@ -1,17 +1,44 @@
 <style type="text/css">
 
-.ace_editor  {
- 	height : 500px;
-	width: 130%
-	font-family: Menlo, Courier New, monospace;
-	font-size: 11pt;
+#wrap {
+	height: 400px;
+	left: 0;
+	right: 0;
 	border: 1px solid #ccc;
 	margin-bottom: 15px;
+}
+.code, .lines {
+	font-family: Menlo, Courier New, monospace;
+	font-size: 11pt;
+}
+.code {
 	background: inherit;
+	width: 100%;
+	height: 100%;
+	padding: 0; margin: 0;
+	border: none;
+	outline: none;
+	resize: none;
+	wrap: off;
+	float: right;
+}
+.lines {
+	float: left;
+	overflow: hidden;
+	text-align: right;
+}
+.lines div {
+	padding-right: 5px;
+	color: lightgray;
+}
+.lines .lineerror {
+	color: #a94442;
+	background: #f2dede;
 }
 
 </style>
 <label style="float:left; margin-right:15px;">Jump to:</label>
+<div class='row'>
 <div class="dropdown" ng-repeat="(type,list) in items" style="float:left; margin-right:5px;margin-bottom:15px;">
   <button class="btn btn-primary dropdown-toggle" type="button" id="itemSelector" data-toggle="dropdown" aria-expanded="true">
  	{{type}}
@@ -23,7 +50,7 @@
 </div>
 <div class='btn btn-default' style="float:right;margin-left:5px;">Save</div>
 <div class='btn btn-default' style="float:right;margin-left:5px;" ng-click="validate()">Validate</div>
-
+</div>
 <div class="row" ng-show="validationResult">
 	<div class="col-lg-12">
 		<div class="alert alert-dismissible" ng-class="validationResult == 'Valid' ? 'alert-success' : 'alert-danger'">
@@ -32,7 +59,12 @@
 	</div>
 </div>
 
-<div ui-ace="{ onLoad : aceLoaded}" ng-model="config_text" style="clear:both;" ></div>
+<div ui-ace="{ onLoad : aceLoaded}" ng-model="config_text" style="clear:both;" ng-show='false'></div>
+<div class='row'>
+<div id="wrap">
+	<textarea class="code" ng-model="config_text"  autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" wrap="off" ts-line="line" ts-tab></textarea>
+</div>
+</div>
 <div class="row">
 	<div class="col-lg-12">
 		<form class="form-inline">

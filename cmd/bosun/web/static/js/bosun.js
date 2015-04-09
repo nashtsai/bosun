@@ -11,7 +11,6 @@ var bosunApp = angular.module('bosunApp', [
     'bosunControllers',
     'mgcrea.ngStrap',
     'ngSanitize',
-    'ui.ace',
 ]);
 bosunApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
@@ -341,7 +340,6 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
         }
         return items;
     }
-    var editor;
     $http.get('/api/config').success(function (data) {
         $scope.config_text = data;
         $scope.items = parseItems();
@@ -356,24 +354,21 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
     }).error(function (data) {
         $scope.validationResult = "Error fetching config: " + data;
     });
-    $scope.aceLoaded = function (_editor) {
-        editor = _editor;
-        editor.getSession().setUseWrapMode(true);
-        editor.on("blur", function () {
-            $scope.$apply(function () {
-                $scope.items = parseItems();
-            });
-        });
-    };
+    //editor.on("blur", function(){
+    //	$scope.$apply(function () {
+    //    		$scope.items = parseItems();
+    //		});
+    //});
     $scope.scrollTo = function (type, name) {
-        var searchRegex = new RegExp("^\\s*" + type + "\\s+" + name + "\\s*\\{", "gm");
-        editor.find(searchRegex, {
-            backwards: false,
-            wrap: true,
-            caseSensitive: false,
-            wholeWord: false,
-            regExp: true
-        });
+        var searchRegex = new RegExp("^\\s*" + type + "\\s+" + name + "\\s*\\{", "g");
+        var lines = $scope.config_text.split("\n");
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].match(searchRegex)) {
+                console.log(i + 1, lines[i]);
+                $scope.line = i + 1;
+                break;
+            }
+        }
         if (type == "alert") {
             $scope.selectAlert(name);
         }
@@ -416,7 +411,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
                 $scope.validationResult = data;
                 var m = data.match(line_re);
                 if (angular.isArray(m) && (m.length > 1)) {
-                    editor.gotoLine(m[1]);
+                    $scope.line = m[1];
                 }
             }
         }).error(function (error) {
@@ -631,8 +626,9 @@ bosunApp.directive('tsLine', function () {
             var parent = elem.parent();
             var linesDiv = parent;
             function lineHighlight(line) {
+                console.log("!!!!");
                 var lineHeight = elem[0].scrollHeight / (elem[0].value.match(/\n/g).length + 1);
-                var jump = (line - 1) * lineHeight;
+                var jump = (line - 5) * lineHeight;
                 elem.scrollTop(jump);
                 elem.scroll();
                 parent.find('.lines div').eq(line - 1).addClass('lineerror');

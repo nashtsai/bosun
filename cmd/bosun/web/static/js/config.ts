@@ -8,6 +8,7 @@ interface IConfigScope extends IBosunScope {
 	validate: () => void;
 	validationResult: string;
 	selectAlert: (alert:string) => void;
+	line: number
 	
 	//rule execution options
 	fromDate: string;
@@ -106,8 +107,6 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 		}
 		return items
 	}
-
-	var editor;
 	
 	$http.get('/api/config')
 		.success((data) => {
@@ -127,25 +126,22 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
    			$scope.validationResult = "Error fetching config: " + data;
   		})
 	
-	$scope.aceLoaded = function(_editor){
-		editor = _editor;
-		editor.getSession().setUseWrapMode(true);
-		editor.on("blur", function(){
-			$scope.$apply(function () {
-            		$scope.items = parseItems();
-        		});
-		});
-	};
+	//editor.on("blur", function(){
+	//	$scope.$apply(function () {
+     //    		$scope.items = parseItems();
+      //		});
+	//});
 	
 	$scope.scrollTo = (type:string, name:string) => {
-		var searchRegex = new RegExp("^\\s*"+type+"\\s+"+name+"\\s*\\{", "gm");
-		editor.find(searchRegex,{
-    			backwards: false,
-    			wrap: true,
-    			caseSensitive: false,
-    			wholeWord: false,
-    			regExp: true,
-		});
+		var searchRegex = new RegExp("^\\s*"+type+"\\s+"+name+"\\s*\\{", "g");
+		var lines = $scope.config_text.split("\n");
+		for(var i = 0; i< lines.length; i++){
+			if (lines[i].match(searchRegex)){
+				console.log(i+1, lines[i]);
+				$scope.line = i+1;
+				break;
+			}
+		}
 		if (type == "alert"){$scope.selectAlert(name);}
 	}
 	
@@ -189,7 +185,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 					$scope.validationResult = data;
 					var m = data.match(line_re);
 					if (angular.isArray(m) && (m.length > 1)) {
-						editor.gotoLine(m[1])
+						$scope.line = m[1];
 					}
 				}
 			})

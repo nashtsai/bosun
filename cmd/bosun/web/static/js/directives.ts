@@ -117,8 +117,9 @@ bosunApp.directive('tsLine', () => {
 			var parent = elem.parent();
 			var linesDiv = parent
 			function lineHighlight(line: any) {
+				console.log("!!!!")
 				var lineHeight = elem[0].scrollHeight / (elem[0].value.match(/\n/g).length + 1);
-				var jump = (line - 1) * lineHeight;
+				var jump = (line - 5) * lineHeight;
 				elem.scrollTop(jump);
 				elem.scroll();
 				parent.find('.lines div').eq(line - 1).addClass('lineerror');
