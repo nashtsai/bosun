@@ -1,7 +1,6 @@
 package web
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,7 +8,6 @@ import (
 	"net/url"
 	"sort"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -399,54 +397,25 @@ func Rule(t miniprofiler.Timer, w http.ResponseWriter, r *http.Request) (interfa
 }
 
 func buildConfig(r *http.Request) (c *conf.Conf, a *conf.Alert, err error) {
-	if r.Method == "GET" { //old rule page.
-		var buf bytes.Buffer
-		fmt.Fprintf(&buf, "stateFile =\n")
-		fmt.Fprintf(&buf, "tsdbHost = %s\n", schedule.Conf.TSDBHost)
-		fmt.Fprintf(&buf, "graphiteHost = %s\n", schedule.Conf.GraphiteHost)
-		fmt.Fprintf(&buf, "logstashElasticHosts = %s\n", schedule.Conf.LogstashElasticHosts)
-		fmt.Fprintf(&buf, "smtpHost = %s\n", schedule.Conf.SMTPHost)
-		fmt.Fprintf(&buf, "emailFrom = %s\n", schedule.Conf.EmailFrom)
-		fmt.Fprintf(&buf, "responseLimit = %d\n", schedule.Conf.ResponseLimit)
-		fmt.Fprintf(&buf, "hostname = %s\n", schedule.Conf.Hostname)
-		for k, v := range schedule.Conf.Vars {
-			if strings.HasPrefix(k, "$") {
-				fmt.Fprintf(&buf, "%s=%s\n", k, v)
-			}
-		}
-		fmt.Fprintf(&buf, "%s\n", r.FormValue("template"))
-		fmt.Fprintf(&buf, "%s\n", r.FormValue("alert"))
-		c, err := conf.New("Test Config", buf.String())
-		if err != nil {
-			return nil, nil, err
-		}
-		var a *conf.Alert
-		// Set a to the last alert.
-		for _, a = range c.OrderedAlerts {
-		}
-		return c, a, nil
-	} else {
-		//On POST, read entire config from body.
-		config, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		c, err := conf.New("Test Config", string(config))
-		if err != nil {
-			return nil, nil, err
-		}
-		c.StateFile = ""
-
-		var a *conf.Alert
-		alertName := r.FormValue("alert")
-		if alertName == "" {
-			return nil, nil, fmt.Errorf("must supply alert to run")
-		}
-		a, ok := c.Alerts[alertName]
-		if !ok {
-			return nil, nil, fmt.Errorf("alert %s not found", alertName)
-		}
-		return c, a, nil
+	config, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, nil, err
 	}
+
+	c, err = conf.New("Test Config", string(config))
+	if err != nil {
+		return nil, nil, err
+	}
+	c.StateFile = ""
+
+	alertName := r.FormValue("alert")
+	if alertName == "" {
+		return nil, nil, fmt.Errorf("must supply alert to run")
+	}
+	a, ok := c.Alerts[alertName]
+	if !ok {
+		return nil, nil, fmt.Errorf("alert %s not found", alertName)
+	}
+	return c, a, nil
+
 }
