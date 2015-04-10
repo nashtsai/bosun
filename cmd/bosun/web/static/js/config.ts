@@ -8,7 +8,7 @@ interface IConfigScope extends IBosunScope {
 	validate: () => void;
 	validationResult: string;
 	selectAlert: (alert:string) => void;
-	line: number
+	reparse: () => void;
 	
 	//rule execution options
 	fromDate: string;
@@ -52,7 +52,14 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 	$scope.items = parseItems();
 	$scope.tab = search.tab || 'results';
 	
+	var textElem = $("#configText");
+	$timeout(()=>{ 
+			textElem.linedtextarea();
+	})
+	
+	
 	var expr = search.expr
+	
 	function buildAlertFromExpr(){
 		if (!expr) return
 		var newAlertName = "test";
@@ -110,6 +117,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 	
 	$http.get('/api/config')
 		.success((data) => {
+			console.log("vvv")
 			$scope.config_text = data;
 			$scope.items = parseItems();
 			buildAlertFromExpr()
@@ -126,19 +134,25 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
    			$scope.validationResult = "Error fetching config: " + data;
   		})
 	
-	//editor.on("blur", function(){
-	//	$scope.$apply(function () {
-     //    		$scope.items = parseItems();
-      //		});
-	//});
+	$scope.reparse = function(){
+		$scope.items = parseItems();
+	}
+	
+	function scrollToLine(line:number, elem:any){
+		$("#wrap").find('.lineerror').removeClass('lineerror');
+		var lineHeight = textElem[0].scrollHeight / (elem[0].value.match(/\n/g).length + 1);
+		var jump = (line - 5) * lineHeight;
+		elem.scrollTop(jump);
+		elem.scroll();
+		$("#wrap").find('.lines div').eq(line - 1).addClass('lineerror');
+	}
 	
 	$scope.scrollTo = (type:string, name:string) => {
 		var searchRegex = new RegExp("^\\s*"+type+"\\s+"+name+"\\s*\\{", "g");
 		var lines = $scope.config_text.split("\n");
 		for(var i = 0; i< lines.length; i++){
 			if (lines[i].match(searchRegex)){
-				console.log(i+1, lines[i]);
-				$scope.line = i+1;
+				scrollToLine(i+1, textElem);
 				break;
 			}
 		}
@@ -185,7 +199,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
 					$scope.validationResult = data;
 					var m = data.match(line_re);
 					if (angular.isArray(m) && (m.length > 1)) {
-						$scope.line = m[1];
+						scrollToLine(m[1], textElem);
 					}
 				}
 			})

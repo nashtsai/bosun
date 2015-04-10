@@ -299,6 +299,10 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
     $scope.template_group = search.template_group || '';
     $scope.items = parseItems();
     $scope.tab = search.tab || 'results';
+    var textElem = $("#configText");
+    $timeout(function () {
+        textElem.linedtextarea();
+    });
     var expr = search.expr;
     function buildAlertFromExpr() {
         if (!expr)
@@ -341,6 +345,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
         return items;
     }
     $http.get('/api/config').success(function (data) {
+        console.log("vvv");
         $scope.config_text = data;
         $scope.items = parseItems();
         buildAlertFromExpr();
@@ -354,18 +359,23 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
     }).error(function (data) {
         $scope.validationResult = "Error fetching config: " + data;
     });
-    //editor.on("blur", function(){
-    //	$scope.$apply(function () {
-    //    		$scope.items = parseItems();
-    //		});
-    //});
+    $scope.reparse = function () {
+        $scope.items = parseItems();
+    };
+    function scrollToLine(line, elem) {
+        $("#wrap").find('.lineerror').removeClass('lineerror');
+        var lineHeight = textElem[0].scrollHeight / (elem[0].value.match(/\n/g).length + 1);
+        var jump = (line - 5) * lineHeight;
+        elem.scrollTop(jump);
+        elem.scroll();
+        $("#wrap").find('.lines div').eq(line - 1).addClass('lineerror');
+    }
     $scope.scrollTo = function (type, name) {
         var searchRegex = new RegExp("^\\s*" + type + "\\s+" + name + "\\s*\\{", "g");
         var lines = $scope.config_text.split("\n");
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].match(searchRegex)) {
-                console.log(i + 1, lines[i]);
-                $scope.line = i + 1;
+                scrollToLine(i + 1, textElem);
                 break;
             }
         }
@@ -411,7 +421,7 @@ bosunControllers.controller('ConfigCtrl', ['$scope', '$http', '$location', '$rou
                 $scope.validationResult = data;
                 var m = data.match(line_re);
                 if (angular.isArray(m) && (m.length > 1)) {
-                    $scope.line = m[1];
+                    scrollToLine(m[1], textElem);
                 }
             }
         }).error(function (error) {
@@ -616,32 +626,6 @@ bosunApp.directive("tooltip", function () {
     return {
         link: function (scope, elem, attrs) {
             angular.element(elem[0]).tooltip({ placement: "bottom" });
-        }
-    };
-});
-bosunApp.directive('tsLine', function () {
-    return {
-        link: function (scope, elem, attrs) {
-            elem.linedtextarea();
-            var parent = elem.parent();
-            var linesDiv = parent;
-            function lineHighlight(line) {
-                console.log("!!!!");
-                var lineHeight = elem[0].scrollHeight / (elem[0].value.match(/\n/g).length + 1);
-                var jump = (line - 5) * lineHeight;
-                elem.scrollTop(jump);
-                elem.scroll();
-                parent.find('.lines div').eq(line - 1).addClass('lineerror');
-            }
-            function lineClear() {
-                parent.find('.lineerror').removeClass('lineerror');
-            }
-            scope.$watch(attrs.tsLine, function (v) {
-                lineClear();
-                if (v) {
-                    lineHighlight(v);
-                }
-            });
         }
     };
 });

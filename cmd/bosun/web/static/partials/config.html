@@ -59,10 +59,10 @@
 	</div>
 </div>
 
-<div ui-ace="{ onLoad : aceLoaded}" ng-model="config_text" style="clear:both;" ng-show='false'></div>
 <div class='row'>
 <div id="wrap">
-	<textarea class="code" ng-model="config_text"  autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" wrap="off" ts-line="line" ts-tab></textarea>
+	<textarea class="code" ng-model="config_text" id="configText" autocorrect="off" autocomplete="off" 
+		autocapitalize="off" spellcheck="false" wrap="off" ts-tab ng-blur="reparse()"></textarea>
 </div>
 </div>
 <div class="row">
