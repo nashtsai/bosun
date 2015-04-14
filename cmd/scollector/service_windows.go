@@ -7,12 +7,12 @@ import (
 	"syscall"
 	"time"
 
-	"bosun.org/_third_party/code.google.com/p/winsvc/debug"
-	"bosun.org/_third_party/code.google.com/p/winsvc/eventlog"
-	"bosun.org/_third_party/code.google.com/p/winsvc/mgr"
-	"bosun.org/_third_party/code.google.com/p/winsvc/registry"
-	"bosun.org/_third_party/code.google.com/p/winsvc/svc"
-	"bosun.org/slog"
+	"./slog"
+	"code.google.com/p/winsvc/debug"
+	"code.google.com/p/winsvc/eventlog"
+	"code.google.com/p/winsvc/mgr"
+	"code.google.com/p/winsvc/registry"
+	"code.google.com/p/winsvc/svc"
 )
 
 var win_service_command = flag.String("winsvc", "", "For Windows Service, can be install, remove, start, stop")

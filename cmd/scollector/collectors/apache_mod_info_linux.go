@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/_third_party/golang.org/x/net/html"
+	"golang.org/x/net/html"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 const (

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 const (

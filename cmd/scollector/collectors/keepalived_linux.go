@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"strings"
 
-	"bosun.org/_third_party/github.com/mjibson/snmp"
+	"github.com/mjibson/snmp"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 type VRRPInstanceEntry struct {

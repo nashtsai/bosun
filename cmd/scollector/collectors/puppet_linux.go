@@ -6,9 +6,9 @@ import (
 	"os"
 	"strconv"
 
-	"bosun.org/_third_party/gopkg.in/yaml.v1"
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
+	"gopkg.in/yaml.v1"
 )
 
 func init() {

@@ -13,10 +13,10 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/slog"
-	"bosun.org/util"
+	"../metadata"
+	"../opentsdb"
+	"../slog"
+	"../util"
 )
 
 type ProgramCollector struct {

@@ -1,0 +1,8 @@
+gom 'github.com/garyburd/redigo/redis'
+gom 'github.com/mjibson/snmp'
+gom 'github.com/mjibson/snmp/mib'
+gom 'github.com/tatsushid/go-fastping'
+gom 'golang.org/x/net/icmp'
+gom 'golang.org/x/net/internal/iana'
+gom 'golang.org/x/net/ipv4'
+gom 'golang.org/x/net/ipv6'

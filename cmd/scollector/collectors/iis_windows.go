@@ -1,8 +1,8 @@
 package collectors
 
 import (
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 func init() {

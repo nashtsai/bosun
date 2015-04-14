@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/util"
+	"../metadata"
+	"../opentsdb"
+	"../util"
 )
 
 func init() {

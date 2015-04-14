@@ -7,10 +7,10 @@ import (
 	"io"
 	"strconv"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/util"
-	"bosun.org/vsphere"
+	"../metadata"
+	"../opentsdb"
+	"../util"
+	"../vsphere"
 )
 
 // Vsphere registers a vSphere collector.

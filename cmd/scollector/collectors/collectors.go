@@ -1,4 +1,4 @@
-package collectors // import "bosun.org/cmd/scollector/collectors"
+package collectors // import "../cmd/scollector/collectors"
 
 import (
 	"bufio"
@@ -10,9 +10,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/util"
+	"../metadata"
+	"../opentsdb"
+	"../util"
 )
 
 var collectors []Collector

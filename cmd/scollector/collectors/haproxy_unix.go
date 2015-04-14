@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 var trackedInstances = []*trackedInstance{}

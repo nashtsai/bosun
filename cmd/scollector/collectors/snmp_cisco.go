@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
 )
 
 const (

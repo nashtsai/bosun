@@ -4,9 +4,9 @@ import (
 	"regexp"
 	"strings"
 
-	"bosun.org/_third_party/github.com/StackExchange/wmi"
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
+	"../metadata"
+	"../opentsdb"
+	"github.com/StackExchange/wmi"
 )
 
 var regexesDotNet = []*regexp.Regexp{}

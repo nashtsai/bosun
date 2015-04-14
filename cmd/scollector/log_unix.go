@@ -2,7 +2,7 @@
 
 package main
 
-import "bosun.org/slog"
+import "./slog"
 
 func init() {
 	err := slog.SetSyslog("scollector")

@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/_third_party/github.com/garyburd/redigo/redis"
+	"github.com/garyburd/redigo/redis"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/util"
+	"../metadata"
+	"../opentsdb"
+	"../util"
 )
 
 func init() {
@@ -145,7 +145,7 @@ func redisInit() {
 	}
 	update()
 	go func() {
-		for range time.Tick(time.Minute * 5) {
+		for _ = range time.Tick(time.Minute * 5) {
 			update()
 		}
 	}()

@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/cmd/scollector/collectors"
-	"bosun.org/collect"
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/slog"
-	"bosun.org/util"
+	"./collect"
+	"./collectors"
+	"./metadata"
+	"./opentsdb"
+	"./slog"
+	"./util"
 )
 
 // These constants should remain in source control as their zero values.
@@ -196,25 +196,25 @@ func main() {
 			collectors.ICMP(s)
 		}
 	}
-	if *flagAWS != "" {
-		for _, s := range strings.Split(*flagAWS, ",") {
-			sp := strings.SplitN(s, ":", 2)
-			if len(sp) != 2 {
-				slog.Fatal("invalid AWS string:", *flagAWS)
-			}
-			accessKey := sp[0]
-			idx := strings.LastIndex(sp[1], "@")
-			if idx == -1 {
-				slog.Fatal("invalid AWS string:", *flagAWS)
-			}
-			secretKey := sp[1][:idx]
-			region := sp[1][idx+1:]
-			if len(accessKey) == 0 || len(secretKey) == 0 || len(region) == 0 {
-				slog.Fatal("invalid AWS string:", *flagAWS)
-			}
-			collectors.AWS(accessKey, secretKey, region)
-		}
-	}
+	// if *flagAWS != "" {
+	// 	for _, s := range strings.Split(*flagAWS, ",") {
+	// 		sp := strings.SplitN(s, ":", 2)
+	// 		if len(sp) != 2 {
+	// 			slog.Fatal("invalid AWS string:", *flagAWS)
+	// 		}
+	// 		accessKey := sp[0]
+	// 		idx := strings.LastIndex(sp[1], "@")
+	// 		if idx == -1 {
+	// 			slog.Fatal("invalid AWS string:", *flagAWS)
+	// 		}
+	// 		secretKey := sp[1][:idx]
+	// 		region := sp[1][idx+1:]
+	// 		if len(accessKey) == 0 || len(secretKey) == 0 || len(region) == 0 {
+	// 			slog.Fatal("invalid AWS string:", *flagAWS)
+	// 		}
+	// 		collectors.AWS(accessKey, secretKey, region)
+	// 	}
+	// }
 	if *flagVsphere != "" {
 		for _, s := range strings.Split(*flagVsphere, ",") {
 			sp := strings.SplitN(s, ":", 2)
@@ -297,7 +297,7 @@ func main() {
 	go func() {
 		const maxMem = 500 * 1024 * 1024 // 500MB
 		var m runtime.MemStats
-		for range time.Tick(time.Minute) {
+		for _ = range time.Tick(time.Minute) {
 			runtime.ReadMemStats(&m)
 			if m.Alloc > maxMem {
 				panic("memory max reached")

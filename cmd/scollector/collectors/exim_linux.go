@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/util"
+	"../metadata"
+	"../opentsdb"
+	"../util"
 )
 
 const eximExiqsumm = "/usr/sbin/exiqsumm"

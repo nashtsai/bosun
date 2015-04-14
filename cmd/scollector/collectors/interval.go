@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"bosun.org/metadata"
-	"bosun.org/opentsdb"
-	"bosun.org/slog"
+	"../metadata"
+	"../opentsdb"
+	"../slog"
 )
 
 type IntervalCollector struct {
