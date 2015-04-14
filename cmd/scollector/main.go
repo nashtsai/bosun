@@ -50,7 +50,7 @@ var (
 	flagHostname        = flag.String("hostname", "", "If set, use as value of host tag instead of system hostname.")
 	flagFreq            = flag.String("freq", "15", "Set the default frequency in seconds for most collectors.")
 	flagConf            = flag.String("conf", "", "Location of configuration file. Defaults to scollector.conf in directory of the scollector executable.")
-	flagAWS             = flag.String("aws", "", `AWS keys and region, format: "access_key:secret_key@region".`)
+	// flagAWS             = flag.String("aws", "", `AWS keys and region, format: "access_key:secret_key@region".`)
 
 	mains []func()
 )
