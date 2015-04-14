@@ -125,8 +125,8 @@ func readConf() {
 			}
 		case "tags":
 			f(flagTags)
-		case "aws":
-			f(flagAWS)
+		// case "aws":
+		// 	f(flagAWS)
 		case "vsphere":
 			f(flagVsphere)
 		case "freq":

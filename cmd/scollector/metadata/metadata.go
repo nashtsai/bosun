@@ -4,6 +4,7 @@ package metadata // import "../metadata"
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -118,11 +119,12 @@ func (m Metakey) TagSet() opentsdb.TagSet {
 }
 
 var (
-	metadata  = make(map[Metakey]interface{})
-	metalock  sync.Mutex
-	metahost  string
-	metafuncs []func()
-	metadebug bool
+	metadata      = make(map[Metakey]interface{})
+	metalock      sync.Mutex
+	metahost      string
+	metafuncs     []func()
+	metadebug     bool
+	outputHandler func([]byte)
 )
 
 // AddMeta adds a metadata entry to memory, which is queued for later sending.
@@ -176,6 +178,16 @@ func Init(u *url.URL, debug bool) error {
 	return nil
 }
 
+// Init initializes the metadata send queue.
+func InitWithOutputHandler(outputHandler func([]byte), debug bool) error {
+	if outputHandler == nil {
+		return fmt.Errorf("outputHandler arg cannot be nil")
+	}
+	metadebug = debug
+	go collectMetadata()
+	return nil
+}
+
 func collectMetadata() {
 	// Wait a bit so hopefully our collectors have run once and populated the
 	// metadata.
@@ -221,13 +233,21 @@ func sendMetadata(ms []Metasend) {
 		slog.Error(err)
 		return
 	}
-	resp, err := http.Post(metahost, "application/json", bytes.NewBuffer(b))
-	if err != nil {
-		slog.Error(err)
-		return
+	if metadebug {
+		slog.Infof("sendMetadata: %s, size: %d", b, len(b))
 	}
-	if resp.StatusCode != 204 {
-		slog.Errorln("bad metadata return:", resp.Status)
-		return
+
+	if outputHandler != nil {
+		outputHandler(b)
+	} else {
+		resp, err := http.Post(metahost, "application/json", bytes.NewBuffer(b))
+		if err != nil {
+			slog.Error(err)
+			return
+		}
+		if resp.StatusCode != 204 {
+			slog.Errorln("bad metadata return:", resp.Status)
+			return
+		}
 	}
 }
